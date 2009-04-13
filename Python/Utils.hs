@@ -56,7 +56,7 @@ import Foreign
 import Foreign.Ptr
 import Foreign.Marshal.Array
 import Foreign.Marshal.Alloc
-import Control.Exception
+import Control.OldException (throwDyn)
 
 {- | Convert a Ptr 'CPyObject' to a 'PyObject'. -}
 fromCPyObject :: Ptr CPyObject -> IO PyObject

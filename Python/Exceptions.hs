@@ -54,9 +54,9 @@ import Foreign
 import Python.Types
 import Data.Dynamic
 import Data.Typeable
-import Control.Exception
 import Python.Interpreter
 import Python.ForeignImports
+import Control.OldException (throwDyn, catchDyn, dynExceptions, Exception)
 
 {- | Execute the given IO action.
 
