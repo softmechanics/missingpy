@@ -8,7 +8,7 @@ import Distribution.PackageDescription.Parse (writeHookedBuildInfo)
 import qualified Distribution.Verbosity as Verbosity
 import Data.List
 
-main = defaultMainWithHooks defaultUserHooks {
+main = defaultMainWithHooks autoconfUserHooks {
          hookedPrograms = [pyConfigProgram],
          postConf=configure
        }

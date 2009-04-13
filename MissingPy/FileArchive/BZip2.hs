@@ -1,4 +1,4 @@
-{-# OPTIONS -fallow-overlapping-instances #-}
+{-# LANGUAGE OverlappingInstances#-}
 
 {- arch-tag: BZip2 files
 Copyright (C) 2005 John Goerzen <jgoerzen@complete.org>

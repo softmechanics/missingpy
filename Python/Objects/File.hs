@@ -1,4 +1,4 @@
-{-# OPTIONS -fallow-overlapping-instances #-}
+{-# LANGUAGE OverlappingInstances#-}
 
 {- arch-tag: Python file-like objects
 Copyright (C) 2005 John Goerzen <jgoerzen@complete.org>

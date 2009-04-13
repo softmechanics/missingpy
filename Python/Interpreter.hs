@@ -1,4 +1,5 @@
-{-# OPTIONS -fallow-overlapping-instances #-}
+{-# LANGUAGE OverlappingInstances#-}
+
 {- arch-tag: Python interpreter module
 Copyright (C) 2005 John Goerzen <jgoerzen@complete.org>
 
