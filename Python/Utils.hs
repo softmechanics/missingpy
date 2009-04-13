@@ -48,14 +48,26 @@ module Python.Utils (-- * Objects
                      py_incref
                     )
     where
-import Python.Types
-import Python.ForeignImports
-import Foreign.C.Types
-import Foreign.C
-import Foreign
-import Foreign.Ptr
-import Foreign.Marshal.Array
-import Foreign.Marshal.Alloc
+import Python.Types (
+                      CPyObject(..)
+                    , PyObject(..)
+                    , PyException(excType, excValue, excTraceBack, excFormatted, PyException)
+                    )
+import Python.ForeignImports (
+                      cNone
+                    , cpyImport_AddModule
+                    , cpyModule_GetDict
+                    , pyErr_Clear
+                    , pyErr_Fetch
+                    , pyErr_NormalizeException
+                    , py_decref
+                    , py_incref
+                    , py_incref
+                    )
+
+import Foreign.C.Types (CInt)
+import Foreign.C (withCString)
+import Foreign (peek, Ptr, newForeignPtr, nullPtr, alloca, withForeignPtr)
 import Control.OldException (throwDyn)
 
 {- | Convert a Ptr 'CPyObject' to a 'PyObject'. -}

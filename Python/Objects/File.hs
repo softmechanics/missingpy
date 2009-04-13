@@ -52,16 +52,24 @@ module Python.Objects.File (-- * PyFile Objects
                             openModeConv
                       )
 where
-import Python.Types
-import Python.Utils
-import Python.Objects
-import Python.Interpreter
-import System.IO
-import System.IO.Error
-import System.IO.Unsafe
-import Python.Exceptions
-import System.IO.HVIO
-import Foreign.C.Types
+import Python.Objects (       PyObject(..)
+                            , callMethodHs
+                            , fromPyObject
+                            , getattr
+                            , hasattr
+                            , noKwParms
+                            , noParms
+                            , runMethodHs
+                            , showPyObject
+                            , toPyObject
+                            )
+import Python.Interpreter (callByName)
+import System.IO (IOMode(..), SeekMode(..))
+import System.IO.Error (eofErrorType)
+import System.IO.Unsafe (unsafeInterleaveIO)
+import Python.Exceptions (catchPy, exc2ioerror)
+import System.IO.HVIO (HVIO(..))
+import Foreign.C.Types (CInt, CLong)
 
 {- | The basic type for a Python file or file-like object.
 

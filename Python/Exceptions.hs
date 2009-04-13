@@ -47,15 +47,17 @@ module Python.Exceptions (-- * Types
                          )
 where
 
-import Python.Utils
-import Foreign.C.Types
-import Python.Objects
-import Foreign
-import Python.Types
-import Data.Dynamic
-import Data.Typeable
-import Python.Interpreter
-import Python.ForeignImports
+import Python.Utils (withPyObject, checkCInt)
+import Python.Objects (strOf)
+import Python.Types (
+                          excType
+                        , excValue
+                        , excFormatted
+                        , PyObject
+                        , PyException
+                        )
+import Data.Dynamic (fromDynamic)
+import Python.ForeignImports (pyErr_GivenExceptionMatches)
 import Control.OldException (throwDyn, catchDyn, dynExceptions, Exception)
 
 {- | Execute the given IO action.

@@ -53,14 +53,41 @@ module Python.Interpreter (
                           )
 where
 
-import Python.Utils
-import Python.Objects
-import Python.Types
-import Python.ForeignImports
-import Foreign
-import Foreign.C.String
-import Foreign.C
-import System.IO.Unsafe
+import Python.Utils (
+                      checkCInt
+                    , getDefaultGlobals
+                    , withPyObject
+                    , fromCPyObject
+                    , py_incref
+                    , pyModule_GetDict
+                    , pyImport_AddModule
+                    )
+
+import Python.Objects (
+                      toPyObject
+                    , noParms
+                    , noKwParms
+                    , fromPyObject
+                    , pyObject_Call
+                    , pyObject_CallHs
+                    , PyObject
+                    , ToPyObject
+                    , FromPyObject
+                    )
+
+import Python.Types (StartFrom(..))
+
+import Python.ForeignImports (
+                      cpy_initialize
+                    , cpyRun_String
+                    , cpyRun_SimpleString
+                    , cpyImport_ImportModuleEx
+                    , sf2c
+                    , pyImport_GetModuleDict
+                    , pyDict_SetItemString
+                    )
+
+import Foreign.C (withCString)
 
 {- | Initialize the Python interpreter environment.
 

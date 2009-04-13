@@ -43,10 +43,13 @@ module Python.Types (
                     )
 where
 
-import Foreign
-import Foreign.C
-import Foreign.C.Types
-import Data.Typeable
+import Foreign (ForeignPtr)
+import Data.Typeable (
+                      TyCon
+                    , mkTyConApp
+                    , mkTyCon
+                    , Typeable(..)
+                    )
 
 type CPyObject = ()
 

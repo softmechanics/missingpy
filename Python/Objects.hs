@@ -65,14 +65,52 @@ module Python.Objects (
 where
 import Python.Types
 import Python.Utils
-import Foreign.C.Types
-import Foreign.C.String
-import Foreign.Ptr
-import Foreign.Storable
-import Foreign.Marshal.Alloc
-import Data.List
-import System.IO.Unsafe
-import Python.ForeignImports
+import Foreign.C.Types (
+                          CLong
+                        , CInt
+                        , CDouble
+                        )
+
+import Foreign.C.String (
+                          withCString
+                        , peekCStringLen
+                        , CStringLen
+                        )
+import Foreign.Ptr (nullPtr)
+import Foreign.Storable (peek)
+import Foreign.Marshal.Alloc (alloca)
+import Python.ForeignImports (
+                          cpyList_AsTuple
+                        , cpyObject_Call
+                        , pyDict_New
+                        , pyFloat_AsDouble
+                        , pyFloat_FromDouble
+                        , pyInt_AsLong
+                        , pyInt_FromLong
+                        , pyList_Append
+                        , pyList_Check
+                        , pyList_GetItem
+                        , pyList_New
+                        , pyList_Size
+                        , pyLong_FromString
+                        , pyMapping_Items
+                        , pyObject_Dir
+                        , pyObject_GetAttrString
+                        , pyObject_HasAttrString
+                        , pyObject_Repr
+                        , pyObject_SetAttrString
+                        , pyObject_SetItem
+                        , pyObject_Str
+                        , pyObject_Type
+                        , pyString_AsStringAndSize
+                        , pyString_FromStringAndSize
+                        , pyTuple_Check
+                        , pyTuple_GetItem
+                        , pyTuple_Size
+                        )
+
+
+
 
 {- | Members of this class can be converted from a Haskell type
 to a Python object. -}

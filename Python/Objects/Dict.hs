@@ -43,14 +43,21 @@ module Python.Objects.Dict (PyDict,
                             mkPyDict,
                             fromPyDict)
 where
-import Python.ForeignImports
-import Python.Objects
-import Python.Utils
-import Foreign
-import Foreign.C.Types
-import Python.Exceptions
-import Database.AnyDBM
-import Python.Types
+import Python.ForeignImports (pyObject_SetItem, pyObject_DelItem, pyObject_GetItem, pyErr_Clear, pyMapping_Keys)
+import Python.Objects(
+                              toPyObject
+                            , fromPyObject
+                            , hasattr
+                            , noKwParms
+                            , noParms
+                            , runMethodHs
+                            , toPyObject
+                            )
+import Python.Utils (withPyObject, checkCInt, fromCPyObject)
+import Foreign (Ptr, nullPtr)
+import Python.Exceptions (catchPy, exc2ioerror)
+import Database.AnyDBM (AnyDBM (..))
+import Python.Types (PyObject, CPyObject)
 
 {- | The basic type for a Python dict or dict-like object. -}
 newtype PyDict = PyDict 
