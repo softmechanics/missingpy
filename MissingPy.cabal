@@ -27,7 +27,7 @@ Description:  MissingPy is two things:
  it.
 
 Build-Type: Custom
-Cabal-Version: >= 1.2
+cabal-version: >= 1.6
 
 Library
   Exposed-Modules: Python.Types,
@@ -44,6 +44,5 @@ Library
   Other-Modules: Python.ForeignImports
   Build-Depends: base == 4.*, MissingH>=1.0.1, anydbm>=1.0.5
   C-Sources: glue/glue.c glue/excglue.c
-  GHC-Options: -O2
   Extensions: ForeignFunctionInterface, TypeSynonymInstances,
               FlexibleInstances
