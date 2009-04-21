@@ -1,5 +1,5 @@
 Name: MissingPy
-Version: 0.10.1
+Version: 0.10.2
 License: GPL
 Maintainer: John Goerzen <jgoerzen@complete.org>
 Author: John Goerzen
@@ -27,10 +27,7 @@ Description:  MissingPy is two things:
  it.
 
 Build-Type: Custom
--- Cabal-Version: >= 1.2 && < 1.3
 Cabal-Version: >= 1.2
-Flag splitBase
-  description: Choose the new smaller, split-up package
 
 Library
   Exposed-Modules: Python.Types,
@@ -45,7 +42,7 @@ Library
    MissingPy.FileArchive.BZip2,
    MissingPy.AnyDBM
   Other-Modules: Python.ForeignImports
-  Build-Depends: base, MissingH>=1.0.1, anydbm>=1.0.5
+  Build-Depends: base == 4.*, MissingH>=1.0.1, anydbm>=1.0.5
   C-Sources: glue/glue.c glue/excglue.c
   GHC-Options: -O2
   Extensions: ForeignFunctionInterface, TypeSynonymInstances,
