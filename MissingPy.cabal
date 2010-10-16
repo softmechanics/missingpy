@@ -1,7 +1,7 @@
 Name: MissingPy
-Version: 0.10.2
-License: GPL
-Maintainer: John Goerzen <jgoerzen@complete.org>
+Version: 0.10.3
+License: MIT
+Maintainer: Simon Hengel <simon.hengel@wiktory.org>
 Author: John Goerzen
 license-file: COPYRIGHT
 extra-source-files: COPYING, genexceptions.hs, README, INSTALL,
