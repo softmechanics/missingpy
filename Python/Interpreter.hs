@@ -1,4 +1,4 @@
-{-# LANGUAGE OverlappingInstances#-}
+{-# LANGUAGE CPP, OverlappingInstances #-}
 
 {- arch-tag: Python interpreter module
 Copyright (C) 2005 John Goerzen <jgoerzen@complete.org>
@@ -35,6 +35,7 @@ Written by John Goerzen, jgoerzen\@complete.org
 
 module Python.Interpreter (
                           py_initialize,
+                          py_initializeThreaded,
                           -- * Intrepreting Code
                           pyRun_SimpleString,
                           pyRun_String,
@@ -50,6 +51,12 @@ module Python.Interpreter (
                           pyImport_ImportModule,
                           pyImport_AddModule,
                           pyModule_GetDict,
+                          -- * Threads
+#ifndef PYTHON_PRE_2_3            
+                          cpy_GILEnsure,
+                          cpy_GILRelease,
+                          withGIL,
+#endif
                           )
 where
 
@@ -79,12 +86,17 @@ import Python.Types (StartFrom(..))
 
 import Python.ForeignImports (
                       cpy_initialize
+                    , cpy_InitThreads
                     , cpyRun_String
                     , cpyRun_SimpleString
                     , cpyImport_ImportModuleEx
                     , sf2c
                     , pyImport_GetModuleDict
                     , pyDict_SetItemString
+#ifndef PYTHON_PRE_2_3                    
+                    , cpy_GILEnsure
+                    , cpy_GILRelease
+#endif
                     )
 
 import Foreign.C (withCString)
@@ -96,6 +108,17 @@ py_initialize :: IO ()
 py_initialize = do cpy_initialize
                    pyImport "traceback"
 
+py_initializeThreaded :: IO ()
+py_initializeThreaded = do cpy_InitThreads
+                           py_initialize
+                           
+#ifndef PYTHON_PRE_2_3
+withGIL :: IO a -> IO a                           
+withGIL act = do st <- cpy_GILEnsure
+                 r <- act
+                 cpy_GILRelease st
+                 return r
+#endif                 
 
 pyRun_SimpleString :: String -> IO ()
 pyRun_SimpleString x = withCString x (\cs ->

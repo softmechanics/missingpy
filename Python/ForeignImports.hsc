@@ -60,8 +60,16 @@ foreign import ccall unsafe "glue.h PyRun_SimpleString"
 foreign import ccall unsafe "glue.h PyRun_String"
   cpyRun_String :: CString -> CInt -> Ptr CPyObject -> Ptr CPyObject -> IO (Ptr CPyObject)
 
+#ifdef PYTHON_PRE_2_5
 foreign import ccall unsafe "glue.h PyImport_ImportModuleEx"
  cpyImport_ImportModuleEx :: CString -> Ptr CPyObject -> Ptr CPyObject -> Ptr CPyObject -> IO (Ptr CPyObject)
+#else
+foreign import ccall unsafe "glue.h PyImport_ImportModuleLevel"
+ cpyImport_ImportModuleLevel :: CString -> Ptr CPyObject -> Ptr CPyObject -> Ptr CPyObject -> CInt -> IO (Ptr CPyObject)
+
+cpyImport_ImportModuleEx :: CString -> Ptr CPyObject -> Ptr CPyObject -> Ptr CPyObject -> IO (Ptr CPyObject)
+cpyImport_ImportModuleEx n g l f = cpyImport_ImportModuleLevel n g l f (fromIntegral (-1))
+#endif
 
 foreign import ccall unsafe "glue.h PyDict_SetItemString"
  pyDict_SetItemString :: Ptr CPyObject -> CString -> Ptr CPyObject -> IO CInt
@@ -192,3 +200,16 @@ foreign import ccall unsafe "glue.h PyImport_AddModule"
 
 foreign import ccall unsafe "glue.h hspy_none"
  cNone :: IO (Ptr CPyObject)
+
+
+foreign import ccall unsafe "glue.h PyEval_InitThreads"
+  cpy_InitThreads :: IO ()
+
+#ifndef PYTHON_PRE_2_3
+foreign import ccall unsafe "glue.h PyGILState_Ensure"
+  cpy_GILEnsure :: IO (Ptr CPyGILState)
+
+foreign import ccall unsafe "glue.h PyGILState_Release"
+  cpy_GILRelease :: Ptr CPyGILState -> IO ()
+#endif
+

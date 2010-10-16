@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {- arch-tag: Python types
 Copyright (C) 2005 John Goerzen <jgoerzen@complete.org>
 
@@ -40,6 +41,10 @@ module Python.Types (
                      CPyObject,
                      PyException(..),
                      StartFrom(..)
+#ifndef PYTHON_PRE_2_3                     
+                    ,PyGILState(..)
+                    ,CPyGILState
+#endif
                     )
 where
 
@@ -56,6 +61,12 @@ type CPyObject = ()
 -- | The type of Python objects.
 newtype PyObject = PyObject (ForeignPtr CPyObject)
     deriving (Eq, Show)
+
+#ifndef PYTHON_PRE_2_3
+type CPyGILState = ()
+newtype PyGILState = PyGILState (ForeignPtr CPyGILState)
+    deriving (Eq, Show)
+#endif
 
 -- | The type of Python exceptions.
 data PyException = PyException {excType :: PyObject, -- ^ Exception type
