@@ -21,9 +21,7 @@ configure _ _ _ lbi = do
 
 -- Populate BuildInfo using python tool.
 pyConfigBuildInfo verbosity lbi = do
-  (pyConfigProg, _) <- requireProgram verbosity pyConfigProgram
---                       (orLaterVersion $ Version [2] []) (withPrograms lbi)
-                       (AnyVersion) (withPrograms lbi)
+  (pyConfigProg, _) <- requireProgram verbosity pyConfigProgram (withPrograms lbi)
   let python = rawSystemProgramStdout verbosity pyConfigProg
   libDir       <- python ["-c", "from distutils.sysconfig import *; print get_python_lib()"]
   incDir       <- python ["-c", "from distutils.sysconfig import *; print get_python_inc()"]
