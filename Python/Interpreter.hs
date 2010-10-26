@@ -35,7 +35,6 @@ Written by John Goerzen, jgoerzen\@complete.org
 
 module Python.Interpreter (
                           py_initialize,
-                          py_initializeThreaded,
                           -- * Intrepreting Code
                           pyRun_SimpleString,
                           pyRun_String,
@@ -52,7 +51,8 @@ module Python.Interpreter (
                           pyImport_AddModule,
                           pyModule_GetDict,
                           -- * Threads
-#ifndef PYTHON_PRE_2_3            
+                          py_initializeThreaded,
+#ifndef PYTHON_PRE_2_3         
                           cpy_GILEnsure,
                           cpy_GILRelease,
                           withGIL,
@@ -100,6 +100,7 @@ import Python.ForeignImports (
                     )
 
 import Foreign.C (withCString)
+import Control.Exception (finally)
 
 {- | Initialize the Python interpreter environment.
 
@@ -115,9 +116,8 @@ py_initializeThreaded = do cpy_InitThreads
 #ifndef PYTHON_PRE_2_3
 withGIL :: IO a -> IO a                           
 withGIL act = do st <- cpy_GILEnsure
-                 r <- act
-                 cpy_GILRelease st
-                 return r
+                 finally act
+                   (cpy_GILRelease st)
 #endif                 
 
 pyRun_SimpleString :: String -> IO ()
