@@ -1,7 +1,7 @@
 Name: MissingPy
-Version: 0.10.3
+Version: 0.10.4
 License: MIT
-Maintainer: Simon Hengel <simon.hengel@wiktory.org>
+Maintainer: Matt Brown <matt@softmechanics.net>
 Author: John Goerzen
 license-file: COPYRIGHT
 extra-source-files: COPYING, genexceptions.hs, README, INSTALL,
@@ -9,6 +9,8 @@ extra-source-files: COPYING, genexceptions.hs, README, INSTALL,
 Stability: Alpha
 Copyright: Copyright (c) 2005-2008 John Goerzen
 Synopsis: Haskell interface to Python
+Homepage: http://github.com/softmechanics/missingpy
+Bug-reports: http://github.com/softmechanics/missingpy/issues
 Description:  MissingPy is two things:
  .
  A Haskell binding for many C and Python libraries for tasks such as
