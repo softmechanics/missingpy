@@ -10,6 +10,9 @@ def print_time(name,delay):
       count += 1
       print "%s: count %d" % (name, count)
 
+   # other threads are not affected by exceptions
+   raise Exception(name)
+
 def newThread(n):
    thread.start_new_thread(print_time, ("Thread-%d" % n,n))
 
