@@ -100,24 +100,64 @@ import Python.ForeignImports (
                     )
 
 import Foreign.C (withCString)
-import Control.Exception (finally)
+import Control.Exception (handle, finally, throwTo, SomeException)
+import Control.Concurrent (rtsSupportsBoundThreads, forkOS, myThreadId)
+import Control.Concurrent.MVar
+import System.IO.Unsafe
 
 {- | Initialize the Python interpreter environment.
 
 MUST BE DONE BEFORE DOING ANYTHING ELSE! -}
-py_initialize :: IO ()
-py_initialize = do cpy_initialize
-                   pyImport "traceback"
+py_initialize =  
+  if rtsSupportsBoundThreads
+     then py_initializeThreaded
+     else py_initialize'
+
+py_initialize' :: IO ()
+py_initialize' = do cpy_initialize
+                    pyImport "traceback"
+
+{- Python use Thread Local Storage, so all calls must be made through a 
+ - single OS thread.
+ -}
 
 py_initializeThreaded :: IO ()
-py_initializeThreaded = do cpy_InitThreads
-                           py_initialize
-                           
-#ifndef PYTHON_PRE_2_3
-withGIL :: IO a -> IO a                           
-withGIL act = do st <- cpy_GILEnsure
-                 finally act
-                   (cpy_GILRelease st)
+py_initializeThreaded = do 
+  forkOS $ do 
+    cpy_InitThreads
+    py_initialize'
+    pyPoll
+  return ()
+                             
+pyQ :: MVar (IO ())
+pyQ = unsafePerformIO newEmptyMVar
+
+{- Poll pyQ for python actions, and execute them -}
+pyPoll = do
+  a <- takeMVar pyQ
+  withGIL' a >> pyPoll
+
+{- Pass python actions to dedicated python thread for execution. -} 
+withGIL :: IO a -> IO a
+withGIL = 
+  if rtsSupportsBoundThreads
+     then withGILThreaded
+     else withGIL'
+
+withGILThreaded :: IO a -> IO a
+withGILThreaded act = do
+  tid <- myThreadId
+  r <- newEmptyMVar
+  putMVar pyQ $ handle (\e -> throwTo tid (e::SomeException)) $ putMVar r =<< act
+  takeMVar r
+
+withGIL' :: IO a -> IO a                           
+#ifdef PYTHON_PRE_2_3
+withGIL' a = a
+#else
+withGIL' act = do st <- cpy_GILEnsure
+                  finally act
+                    (cpy_GILRelease st)
 #endif                 
 
 pyRun_SimpleString :: String -> IO ()
