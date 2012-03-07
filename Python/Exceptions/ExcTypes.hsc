@@ -88,7 +88,7 @@ import Python.Types
 import Python.Objects
 import System.IO.Unsafe
 import Python.Utils
-import Foreign
+import Foreign hiding (unsafePerformIO)
 exctypes_internal_e :: IO (Ptr CPyObject) -> IO PyObject
 exctypes_internal_e f = do p <- f
                            fp <- newForeignPtr_ p
