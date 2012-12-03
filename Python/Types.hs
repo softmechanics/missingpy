@@ -48,6 +48,7 @@ module Python.Types (
                     )
 where
 
+import Control.Exception ( Exception )
 import Foreign (ForeignPtr)
 import Data.Typeable (
                       TyCon
@@ -76,6 +77,7 @@ data PyException = PyException {excType :: PyObject, -- ^ Exception type
                                }
 instance Show PyException where
     show x = excFormatted x
+instance Exception PyException
 
 pyExceptionTc :: TyCon
 pyExceptionTc = mkTyCon "MissingPy.Python.Types.PyException"
