@@ -79,6 +79,7 @@ import Foreign.C.String (
 import Foreign.Ptr (nullPtr)
 import Foreign.Storable (peek)
 import Foreign.Marshal.Alloc (alloca)
+import Foreign (newForeignPtr_)
 import Python.ForeignImports (
                           cpyList_AsTuple
                         , cpyObject_Call
@@ -107,6 +108,10 @@ import Python.ForeignImports (
                         , pyTuple_Check
                         , pyTuple_GetItem
                         , pyTuple_Size
+                        , py_decref
+                        , cNone
+                        , cTrue
+                        , cFalse
                         )
 
 
@@ -390,6 +395,10 @@ instance (FromPyObject a, FromPyObject b) => FromPyObject [(a, b)] where
             in do pyodict <- ((fromPyObject pydict)::IO [(PyObject, PyObject)])
                   mapM conv pyodict
 
+instance ToPyObject a => ToPyObject (Maybe a) where
+  toPyObject Nothing = PyObject `fmap` (cNone >>= newForeignPtr_)
+  toPyObject (Just x) = toPyObject x
+
 --------------------------------------------------
 -- Strings
 
@@ -450,6 +459,19 @@ instance FromPyObject Integer where
         do longstr <- strOf pyo
            return $ read longstr
 
+--------------------------------------------------
+-- Numbers, Python Bools
+
+instance ToPyObject Bool where
+    toPyObject True = cTrue >>= fromCPyObject
+    toPyObject False = cFalse>>= fromCPyObject
+
+instance FromPyObject Bool where
+    fromPyObject x = do
+      l <- fromPyObject x :: IO CLong
+      if l == 0
+         then return False
+         else return True
 --------------------------------------------------
 -- Numbers, anything else.
 {- For these, we attempt to guess whether to handle it as an

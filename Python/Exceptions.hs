@@ -59,6 +59,7 @@ import Python.Types (
 import Data.Dynamic (fromDynamic)
 import Python.ForeignImports (pyErr_GivenExceptionMatches)
 import Control.Exception (throw, catch, fromException, SomeException)
+import Prelude hiding ( catch )
 
 {- | Execute the given IO action.
 
