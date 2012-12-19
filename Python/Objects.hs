@@ -80,6 +80,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Storable (peek)
 import Foreign.Marshal.Alloc (alloca)
 import Foreign (newForeignPtr_)
+import Data.ByteString (ByteString, useAsCStringLen, packCStringLen)
 import Python.ForeignImports (
                           cpyList_AsTuple
                         , cpyObject_Call
@@ -423,6 +424,21 @@ instance FromPyObject String where
                   )
                )
                                     )
+
+-- ByteString to PyObject
+instance ToPyObject ByteString where
+  toPyObject bs = useAsCStringLen bs toPyObject
+
+instance FromPyObject ByteString where
+  fromPyObject x = withPyObject x (\po ->
+      alloca (\lenptr ->
+          alloca (\strptr ->
+            do pyString_AsStringAndSize po strptr lenptr
+               len <- peek lenptr
+               cstr <- peek strptr
+               packCStringLen (cstr, fromIntegral len)
+            ) ) )
+
 
 --------------------------------------------------
 -- Numbers, Python Ints
