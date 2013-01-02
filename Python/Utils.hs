@@ -68,7 +68,7 @@ import Python.ForeignImports (
 import Foreign.C.Types (CInt)
 import Foreign.C (withCString)
 import Foreign (peek, Ptr, newForeignPtr, nullPtr, alloca, withForeignPtr)
-import Control.OldException (throwDyn)
+import Control.Exception (throw)
 
 {- | Convert a Ptr 'CPyObject' to a 'PyObject'. -}
 fromCPyObject :: Ptr CPyObject -> IO PyObject
@@ -110,7 +110,7 @@ raisePyException =
                                  excTraceBack = otb,
                                  excFormatted = ""}
           pyErr_Clear
-          throwDyn exc
+          throw exc
                    )))
 {-
     do cpy <- getexc

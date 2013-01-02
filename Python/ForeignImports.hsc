@@ -201,6 +201,16 @@ foreign import ccall unsafe "glue.h PyImport_AddModule"
 foreign import ccall unsafe "glue.h hspy_none"
  cNone :: IO (Ptr CPyObject)
 
+foreign import ccall unsafe "glue.h hspy_true"
+ cTrue :: IO (Ptr CPyObject)
+
+foreign import ccall unsafe "glue.h hspy_false"
+ cFalse :: IO (Ptr CPyObject)
+
+{-
+foreign import ccall unsafe "glue.h PyBool_FromLong"
+ pyBool_FromLong :: CLong -> IO (Ptr CPyObject)
+-}
 
 foreign import ccall unsafe "glue.h PyEval_InitThreads"
   cpy_InitThreads :: IO ()

@@ -58,14 +58,15 @@ import Python.Types (
                         )
 import Data.Dynamic (fromDynamic)
 import Python.ForeignImports (pyErr_GivenExceptionMatches)
-import Control.OldException (throwDyn, catchDyn, dynExceptions, Exception)
+import Control.Exception (throw, catch, fromException, SomeException)
+import Prelude hiding ( catch )
 
 {- | Execute the given IO action.
 
 If it raises a 'PyException', then execute the supplied handler and return
 its return value.  Otherwise, process as normal. -}
 catchPy :: IO a -> (PyException -> IO a) -> IO a
-catchPy = catchDyn
+catchPy = catch
 
 {- | Like 'catchPy', with the order of arguments reversed. -}
 handlePy :: (PyException -> IO a) -> IO a -> IO a
@@ -78,14 +79,14 @@ catchSpecificPy pyo action handlerfunc =
     let handler e = do d <- doesExceptionMatch e pyo
                        if d
                           then handlerfunc e
-                          else throwDyn e
+                          else throw e
         in catchPy action handler
 
 {- | Useful as the first argument to catchJust, tryJust, or handleJust.
 Return Nothing if the given exception is not a 'PyException', or 
 the exception otherwise. -}
-pyExceptions :: Exception -> Maybe PyException
-pyExceptions exc = dynExceptions exc >>= fromDynamic
+pyExceptions :: SomeException -> Maybe PyException
+pyExceptions = fromException
 
 {- | When an exception is thrown, it is not immediately formatted.
 

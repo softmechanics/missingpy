@@ -54,6 +54,16 @@ PyObject *hspy_none(void) {
   return Py_None;
 }
 
+PyObject *hspy_true(void) {
+  Py_INCREF(Py_True);
+  return Py_True;
+}
+
+PyObject *hspy_false(void) {
+  Py_INCREF(Py_False);
+  return Py_False;
+}
+
 PyObject *glue_PyMapping_Keys(PyObject *o) {
   return PyMapping_Keys(o);
 }

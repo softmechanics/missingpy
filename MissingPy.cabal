@@ -1,5 +1,5 @@
 Name: MissingPy
-Version: 0.10.6
+Version: 0.10.7
 License: MIT
 Maintainer: Matt Brown <matt@softmechanics.net>
 Author: John Goerzen
@@ -44,7 +44,7 @@ Library
    MissingPy.FileArchive.BZip2,
    MissingPy.AnyDBM
   Other-Modules: Python.ForeignImports
-  Build-Depends: base == 4.*, MissingH>=1.0.1, anydbm>=1.0.5
+  Build-Depends: base == 4.*, MissingH>=1.0.1, anydbm>=1.0.5, bytestring
   C-Sources: glue/glue.c glue/excglue.c
   Extensions: ForeignFunctionInterface, TypeSynonymInstances,
               FlexibleInstances
